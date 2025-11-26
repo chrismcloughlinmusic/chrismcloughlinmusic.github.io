@@ -1,340 +1,49 @@
-<!--
-Chris McLoughlin Music — Single-file static site (index.html)
-Drop this file at the root of a repository named: <yourgithubusername>.github.io
-Replace placeholders (LOGO, FORMSPREE ID, YOUTUBE IDs, GOOGLE CALENDAR ID) as noted below.
-
-What this includes:
-- Responsive, mobile-first layout
-- Light/Dark mode that follows the visitor's system preference, with a manual toggle
-- Color palette: navy / grey / white + gold accents
-- Sections: Hero, About, Music (YouTube embeds), Events (Google Calendar embed), Booking (Formspree), Contact
-- Accessible markup and semantic HTML
-
-Change list before publishing:
-1) Replace `assets/logo.svg` with your SVG/PNG logo (or update the <img> src)
-2) Replace the Formspree action URL: https://formspree.io/f/your-form-id
-3) Replace YouTube embed VIDEO_ID placeholders with your actual ids
-4) Replace Google Calendar embed src with your calendar's embed link
-5) Optional: update contact email and social links
-
-To deploy on GitHub Pages:
-- Create repo: yourusername.github.io
-- Commit this index.html (and an `assets/` folder with logo/photo)
-- Visit https://yourusername.github.io
--->
-
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Chris McLoughlin Music</title>
-  <meta name="description" content="Chris McLoughlin — Catholic church musician. Bookings, music, videos, and schedule." />
-  <meta name="theme-color" content="#0b2540">
-
   <style>
-    /* Base variables */
-    :root{
-      --navy:#0b2540; /* primary */
-      --soft-navy:#16324b;
-      --muted:#6b7280; /* grey */
-      --bg:#ffffff;
-      --card:#f8faf9;
-      --text:#0b1620;
-      --gold:#c89b3a;
-      --radius:12px;
-      --gap:1rem;
-      --maxw:1100px;
-      color-scheme: light;
-      font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
     }
 
-    @media (prefers-color-scheme: dark){
-      :root{
-        --bg:#061020;
-        --card:#071627;
-        --text:#e8eef6;
-        --muted:#9aa4b0;
-      }
-      html{background:linear-gradient(180deg,#02060a 0%, #04101a 100%)}
+    /* Navbar */
+    .navbar {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      padding: 10px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(8px);
     }
 
-    /* Small helper to allow manual toggle class */
-    html[data-theme='dark']{ --bg:#061020; --card:#071627; --text:#e8eef6; --muted:#9aa4b0 }
-    html[data-theme='light']{ --bg:#ffffff; --card:#f8faf9; --text:#061018; --muted:#6b7280 }
-
-    *{box-sizing:border-box}
-    html,body{height:100%;margin:0;background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased}
-    a{color:inherit}
-    img{max-width:100%;height:auto;display:block}
-    .container{max-width:var(--maxw);margin:0 auto;padding:1rem}
-
-    /* Header */
-    header.site-header{position:sticky;top:0;z-index:60;background:linear-gradient(rgba(255,255,255,0.6), rgba(255,255,255,0.35));backdrop-filter: blur(6px);border-bottom:1px solid rgba(0,0,0,0.04)}
-    @media(prefers-color-scheme:dark){ header.site-header{background:linear-gradient(rgba(6,16,32,0.6), rgba(6,16,32,0.35));border-bottom:1px solid rgba(255,255,255,0.03)} }
-    .header-inner{display:flex;align-items:center;gap:1rem;padding:.6rem 0}
-    .brand{display:flex;align-items:center;gap:.6rem;text-decoration:none}
-    .brand img{height:44px;width:auto;border-radius:8px}
-    .site-title{font-weight:700;font-size:1.05rem}
-
-    .nav{margin-left:auto;display:none;gap:1rem}
-    .nav a{padding:.5rem .7rem;border-radius:8px;text-decoration:none;font-weight:600}
-    .nav a:hover{background:rgba(0,0,0,0.04)}
-
-    .nav-toggle{margin-left:auto;border:0;background:transparent;font-size:1.3rem}
-
-    /* Hero */
-    .hero{padding:2.25rem 0 2rem;background:linear-gradient(180deg, rgba(11,37,64,0.04) 0%, rgba(255,255,255,0) 60%)}
-    .hero-inner{display:grid;gap:1rem}
-    .hero-head{display:flex;gap:1rem;align-items:center}
-    .hero h1{font-size:clamp(1.6rem, 4.5vw, 2.4rem);margin:0}
-    .lead{color:var(--muted);max-width:60ch}
-    .hero-cta{display:flex;gap:.6rem;margin-top:.6rem}
-    .btn{display:inline-block;padding:.55rem .85rem;border-radius:10px;font-weight:700;text-decoration:none}
-    .btn-primary{background:var(--navy);color:white}
-    .btn-outline{border:1px solid rgba(0,0,0,0.08);background:transparent}
-
-    /* Two-column layout for larger screens */
-    .two{display:grid;gap:1rem}
-
-    /* About */
-    .about{padding:1.25rem 0}
-    .bio{line-height:1.5;color:var(--muted)}
-
-    /* Music grid */
-    .music-grid{display:grid;gap:1rem}
-    .video-card{background:var(--card);padding:.5rem;border-radius:10px}
-    .video-title{font-weight:600;margin:.5rem 0 .25rem}
-    .video-meta{color:var(--muted);font-size:.95rem}
-
-    /* Events */
-    .events{padding:1rem 0}
-    .calendar-wrap{background:var(--card);padding:1rem;border-radius:10px}
-
-    /* Booking Form */
-    form.booking{display:grid;gap:.6rem}
-    label.field{display:block}
-    input,textarea,select{width:100%;padding:.6rem;border:1px solid rgba(0,0,0,0.08);border-radius:8px;background:transparent;color:var(--text)}
-    .form-note{color:var(--muted);font-size:.95rem}
-
-    /* Footer */
-    footer.site-footer{padding:1rem 0;border-top:1px solid rgba(0,0,0,0.04);color:var(--muted);text-align:center}
-
-    /* Responsive rules */
-    @media(min-width:720px){
-      .nav{display:flex}
-      .nav-toggle{display:none}
-      .hero-inner{grid-template-columns:1fr 360px;align-items:center}
-      .music-grid{grid-template-columns:repeat(2,1fr)}
-      .two{grid-template-columns:1fr 1fr}
+    .navbar img {
+      height: 50px; /* your signature logo */
     }
 
-    @media(min-width:1000px){
-      .music-grid{grid-template-columns:repeat(3,1fr)}
+    /* Hero image */
+    .hero {
+      height: 100vh;
+      width: 100%;
+      background-image: url('182A1987.jpg'); /* replace with your big picture */
+      background-size: cover;
+      background-position: center;
     }
-
-    /* Theme toggle */
-    .theme-toggle{display:inline-flex;align-items:center;gap:.4rem;padding:.25rem .5rem;border-radius:999px;border:1px solid rgba(0,0,0,0.06);background:transparent}
-
-    /* Small visual polish */
-    .muted{color:var(--muted)}
-    .accent{color:var(--gold)}
-
   </style>
 </head>
 <body>
-  <header class="site-header">
-    <div class="container header-inner">
-      <a class="brand" href="#hero">
-        <img src="assets/logo.svg" alt="Chris McLoughlin Music logo" onerror="this.style.display='none'" />
-        <div>
-          <div class="site-title">Chris McLoughlin Music</div>
-          <div class="muted" style="font-size:.85rem">Catholic Church Musician</div>
-        </div>
-      </a>
 
-      <nav class="nav" aria-label="Primary">
-        <a href="#about">About</a>
-        <a href="#music">Music</a>
-        <a href="#events">Events</a>
-        <a href="#booking">Booking</a>
-        <a href="#contact">Contact</a>
-      </nav>
+  <div class="navbar">
+    <img src="signature.png" alt="Chris McLoughlin Signature" />
+  </div>
 
-      <button class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="primaryNav">☰</button>
+  <div class="hero"></div>
 
-      <div style="margin-left:12px;display:flex;gap:.5rem;align-items:center">
-        <button id="themeToggle" class="theme-toggle" aria-pressed="false">🌙<span style="font-size:.9rem">Theme</span></button>
-      </div>
-    </div>
-  </header>
-
-  <main>
-    <section id="hero" class="hero">
-      <div class="container hero-inner">
-        <div>
-          <div class="hero-head">
-            <div style="flex:1">
-              <h1>Liturgical music for Masses, Weddings, and Parish Events</h1>
-              <p class="lead">Experienced Catholic church musician — organ, piano, congregational leadership, contemporary and traditional repertoire. Serving parishes across the diocese.</p>
-              <div class="hero-cta">
-                <a class="btn btn-primary" href="#booking">Request Booking</a>
-                <a class="btn btn-outline" href="#music">Listen</a>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <aside style="padding:1rem;background:linear-gradient(180deg,rgba(200,155,58,0.06),transparent);border-radius:12px;max-width:360px">
-          <img src="assets/headshot.jpg" alt="Chris McLoughlin headshot" style="border-radius:10px;margin-bottom:.6rem" onerror="this.style.display='none'" />
-          <div style="font-weight:700">Chris McLoughlin</div>
-          <div class="muted" style="margin-bottom:.5rem">Catholic Church Musician</div>
-          <div class="muted" style="font-size:.95rem">Available for Masses • Weddings • Funerals • Adoration</div>
-        </aside>
-      </div>
-    </section>
-
-    <section id="about" class="container about">
-      <h2>About</h2>
-      <p class="bio">I’m Chris McLoughlin — a liturgical musician with experience leading congregational song, accompanying on organ and piano, and preparing music for the Mass. I aim to support the prayer life of the parish through reverent and musically informed liturgy.</p>
-      <div class="two" style="margin-top:1rem">
-        <div>
-          <h3>Services</h3>
-          <ul>
-            <li>Music for Sunday Masses</li>
-            <li>Weddings and funerals</li>
-            <li>Choir rehearsal & cantoring</li>
-            <li>Instrumental accompaniment</li>
-          </ul>
-        </div>
-        <div>
-          <h3>Technical</h3>
-          <ul>
-            <li>Organ & piano</li>
-            <li>Sheet music & repertoire planning</li>
-            <li>Portable PA / accompaniment (if required)</li>
-          </ul>
-        </div>
-      </div>
-    </section>
-
-    <section id="music" class="container">
-      <h2>Music</h2>
-      <p class="muted">Selected recordings and liturgical resources.</p>
-
-      <div class="music-grid" style="margin-top:.8rem">
-        <!-- Replace VIDEO_ID with your YouTube video id -->
-        <div class="video-card">
-          <div style="position:relative;padding-top:56.25%"><iframe src="https://www.youtube.com/embed/VIDEO_ID_1" title="Performance 1" style="position:absolute;left:0;top:0;width:100%;height:100%;border:0" allowfullscreen loading="lazy"></iframe></div>
-          <div class="video-title">Ave Verum — Live at St. Mary</div>
-          <div class="video-meta muted">St. Mary Parish • 2024</div>
-        </div>
-
-        <div class="video-card">
-          <div style="position:relative;padding-top:56.25%"><iframe src="https://www.youtube.com/embed/VIDEO_ID_2" title="Performance 2" style="position:absolute;left:0;top:0;width:100%;height:100%;border:0" allowfullscreen loading="lazy"></iframe></div>
-          <div class="video-title">Psalm 23 — Organ Accompaniment</div>
-          <div class="video-meta muted">Recorded sample</div>
-        </div>
-
-        <div class="video-card">
-          <div style="position:relative;padding-top:56.25%"><iframe src="https://www.youtube.com/embed/VIDEO_ID_3" title="Performance 3" style="position:absolute;left:0;top:0;width:100%;height:100%;border:0" allowfullscreen loading="lazy"></iframe></div>
-          <div class="video-title">Communion Meditation</div>
-          <div class="video-meta muted">Accompaniment and vocals</div>
-        </div>
-      </div>
-
-      <p style="margin-top:.8rem" class="muted">More recordings on <a href="#">YouTube</a> and <a href="#">SoundCloud</a>.</p>
-    </section>
-
-    <section id="events" class="container events">
-      <h2>Upcoming Events</h2>
-      <div class="calendar-wrap">
-        <!-- Replace the src below with your Google Calendar embed link. Example format:
-             https://calendar.google.com/calendar/embed?src=youremail%40gmail.com&ctz=America%2FNew_York
-        -->
-        <iframe src="https://calendar.google.com/calendar/embed?src=YOUR_CALENDAR_ID&ctz=America%2FNew_York" style="border:0" width="100%" height="600" frameborder="0" scrolling="no" loading="lazy"></iframe>
-      </div>
-    </section>
-
-    <section id="booking" class="container">
-      <h2>Request Booking</h2>
-      <p class="form-note">Fill out the form below — you’ll receive a confirmation email. If you prefer, email <a href="mailto:booking@yourdomain.com">booking@yourdomain.com</a>.</p>
-
-      <!-- Replace the action URL with your Formspree endpoint -->
-      <form class="booking" id="bookingForm" action="https://formspree.io/f/your-form-id" method="POST">
-        <label class="field">Name <input type="text" name="name" required></label>
-        <label class="field">Email <input type="email" name="_replyto" required></label>
-        <label class="field">Event Type <select name="event_type"><option>Sunday Mass</option><option>Wedding</option><option>Funeral</option><option>Rehearsal/Choir</option><option>Other</option></select></label>
-        <label class="field">Event Date <input type="date" name="event_date"></label>
-        <label class="field">Location / Parish <input type="text" name="location"></label>
-        <label class="field">Message <textarea name="message" rows="4"></textarea></label>
-        <div style="display:flex;gap:.6rem;align-items:center">
-          <button class="btn btn-primary" type="submit">Request Booking</button>
-          <div id="bookingStatus" class="muted" aria-live="polite"></div>
-        </div>
-      </form>
-    </section>
-
-    <section id="contact" class="container" style="padding-bottom:2rem">
-      <h2>Contact</h2>
-      <p class="muted">General inquiries: <a href="mailto:chris@yourdomain.com">chris@yourdomain.com</a></p>
-      <p class="muted">Follow: <a href="#">YouTube</a> • <a href="#">Facebook</a></p>
-    </section>
-
-  </main>
-
-  <footer class="site-footer">
-    <div class="container">
-      <small>© <span id="year"></span> Chris McLoughlin • Liturgical Musician</small>
-    </div>
-  </footer>
-
-  <script>
-    // Tiny interactivity: nav toggle, theme toggle, form UX
-    document.getElementById('year').textContent = new Date().getFullYear();
-
-    const navToggle = document.getElementById('navToggle');
-    navToggle && navToggle.addEventListener('click', () => {
-      const nav = document.querySelector('.nav');
-      const expanded = navToggle.getAttribute('aria-expanded') === 'true';
-      navToggle.setAttribute('aria-expanded', String(!expanded));
-      nav.style.display = nav.style.display === 'flex' ? 'none' : 'flex';
-    });
-
-    // Theme toggle -- respects system preference and toggles manual override
-    const themeToggle = document.getElementById('themeToggle');
-    const userPref = localStorage.getItem('site-theme');
-    const systemDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-
-    function applyTheme(theme){
-      if(theme === 'dark') document.documentElement.setAttribute('data-theme','dark');
-      else if(theme === 'light') document.documentElement.setAttribute('data-theme','light');
-      else document.documentElement.removeAttribute('data-theme');
-      themeToggle.setAttribute('aria-pressed', String(theme === 'dark'));
-    }
-
-    if(userPref){ applyTheme(userPref); }
-    else { applyTheme(systemDark ? 'dark' : 'light'); }
-
-    themeToggle.addEventListener('click', () => {
-      // cycle: none -> dark -> light -> none
-      const current = localStorage.getItem('site-theme');
-      if(!current){ localStorage.setItem('site-theme','dark'); applyTheme('dark'); }
-      else if(current === 'dark'){ localStorage.setItem('site-theme','light'); applyTheme('light'); }
-      else { localStorage.removeItem('site-theme'); applyTheme(null); }
-    });
-
-    // Booking form UX
-    const bookingForm = document.getElementById('bookingForm');
-    if(bookingForm){
-      bookingForm.addEventListener('submit', (e) => {
-        const status = document.getElementById('bookingStatus');
-        status.textContent = 'Sending...';
-        // allow form to submit to Formspree; show user feedback
-        setTimeout(() => { status.textContent = 'If sent, you will receive a confirmation shortly.'; }, 900);
-      });
-    }
-  </script>
 </body>
 </html>
-
